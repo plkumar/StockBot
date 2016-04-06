@@ -2,6 +2,7 @@ const fs = require('fs');
 const restify = require('restify');
 const skype = require('skype-sdk');
 const http = require('http');
+const services = require('./services');
 
 const botService = new skype.BotService({
     messaging: {
@@ -81,3 +82,7 @@ server.post('/v1/call', function(data) {
 const port = process.env.PORT || 8080;
 server.listen(port);
 console.log('Listening for incoming requests on port ' + port);
+
+// services.getStockSymbol('Microsoft', (symbol) => {
+//     console.log(JSON.stringify(symbol));
+// })
