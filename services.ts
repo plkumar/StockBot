@@ -2,7 +2,7 @@
 
 var https = require('https');
 var http = require('http');
-var exports = module.exports = {};
+var exports:any = module.exports = {};
 
 exports.GetLUISInfo = function(sourceText, callBack) {
     var requestUri = `https://api.projectoxford.ai/luis/v1/application?id=07c4c72e-d229-4c7b-96db-2034c036d30e&subscription-key=c2ba4a70587642b7a4cada97a40584ed&q=${sourceText}`;
