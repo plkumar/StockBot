@@ -1,3 +1,5 @@
+/// <reference path="typings/tsd.d.ts" />
+
 var https = require('https');
 var http = require('http');
 var exports = module.exports = {};

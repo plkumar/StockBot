@@ -4,5 +4,15 @@
   "ref": "master",
   "path": "typings",
   "bundle": "typings/tsd.d.ts",
-  "installed": {}
+  "installed": {
+    "node/node.d.ts": {
+      "commit": "247e8d48404d11f3aff85dea5029413229e0fc36"
+    },
+    "restify/restify.d.ts": {
+      "commit": "247e8d48404d11f3aff85dea5029413229e0fc36"
+    },
+    "bunyan/bunyan.d.ts": {
+      "commit": "247e8d48404d11f3aff85dea5029413229e0fc36"
+    }
+  }
 }

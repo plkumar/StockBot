@@ -1,3 +1,5 @@
+/// <reference path="typings/tsd.d.ts" />
+
 const fs = require('fs');
 const restify = require('restify');
 const skype = require('skype-sdk');
