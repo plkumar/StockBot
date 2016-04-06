@@ -1,3 +1,5 @@
+/// <reference path="LUISEntities.ts" />
+
 class LuisClient {
     constructor (){
         
