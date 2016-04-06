@@ -83,6 +83,6 @@ const port = process.env.PORT || 8080;
 server.listen(port);
 console.log('Listening for incoming requests on port ' + port);
 
-// services.getStockSymbol('Microsoft', (symbol) => {
-//     console.log(JSON.stringify(symbol));
-// })
+services.getStockSymbol('Microsoft', (symbol) => {
+    console.log(JSON.stringify(symbol));
+})

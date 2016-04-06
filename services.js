@@ -27,24 +27,14 @@ exports.GetLUISInfo = function(sourceText, callBack) {
 };
 
 exports.getStockSymbol = (input, callback) => {
-  var url = `http://dev.markitondemand.com/Api/v2/Lookup/json?input=${input}`;
-  http.get(url, (response) => {
-      var symbolResponse = '';
-      
-      response.on('data', (chunk) => {
-          symbolResponse = symbolResponse + chunk;
-      });
-      
-      response.on('end', () => {
-            var parsed = JSON.parse(symbolResponse);
-            if(callback)
-            {
-                callback(parsed);
-            }
-      });
-      
-      response.resume();
-  }).on('error', (err) => {
-      console.log('Error !');
-  });  
+    var url = `http://dev.markitondemand.com/Api/v2/Lookup/json?input=${input}`;
+    var request = require('request');
+    request.get(url, (error, response, body) => {
+        var symbolResponse = body;
+
+        var parsed = JSON.parse(symbolResponse);
+        if (callback) {
+            callback(parsed);
+        }
+    });
 };
