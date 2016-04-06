@@ -1,7 +1,7 @@
 /// <reference path="typings/tsd.d.ts" />
 
 var https = require('https');
-var http = require('http');
+//var httpClient = require('http');
 var exports:any = module.exports = {};
 
 exports.GetLUISInfo = function(sourceText, callBack) {

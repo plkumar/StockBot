@@ -1,3 +1,4 @@
+/// <reference path="LUISEntities.ts" />
 var LuisClient = (function () {
     function LuisClient() {
     }
@@ -5,3 +6,4 @@ var LuisClient = (function () {
     };
     return LuisClient;
 }());
+//# sourceMappingURL=luis-client.js.map
