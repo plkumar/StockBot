@@ -21,7 +21,7 @@
 	"showOutput": "silent",
 
 	// args is the HelloWorld program to compile.
-	"args": ["stockbot.ts","services.ts"],
+	"args": ["stockbot.ts", "luis-client.ts", "StockClient.ts"],
 
 	// use the standard tsc problem matcher to find compile problems
 	// in the output.

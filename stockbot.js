@@ -70,4 +70,3 @@ console.log('Listening for incoming requests on port ' + port);
 services.getStockSymbol('Microsoft', function (symbol) {
     console.log(JSON.stringify(symbol));
 });
-//# sourceMappingURL=stockbot.js.map
