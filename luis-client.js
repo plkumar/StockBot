@@ -29,3 +29,4 @@ var LUISClient = (function () {
     };
     return LUISClient;
 }());
+//# sourceMappingURL=luis-client.js.map

@@ -4,7 +4,7 @@ const fs = require('fs');
 const restify = require('restify');
 const skype = require('skype-sdk');
 const http = require('http');
-const services = require('./services');
+import  stockClient = require('./StockClient');
 
 const botService = new skype.BotService({
     messaging: {
@@ -34,33 +34,34 @@ botService.on('personalMessage', (bot, data) => {
     console.log("Message received \n" + JSON.stringify(data));
     //bot.reply(`Hey ${data.from}. Thank you for your message: "${data.content}".`, true);
     if (data.content !== "") {
-        http.get(`http://www.google.com/finance/info?q=${data.content}`, (res) => {
-            console.log(`Got response: ${res.statusCode}`);
-            if(res.statusCode == 400)
-            {
-                console.log("not found")
-                bot.reply(`Sorry, specified stock quote identifier "${data.content}" not found!`, true);
-            }
-            // consume response body
-            var pageData = '';
+        //stockClient.getStockSymbol('test', (error, data) => {});
+        // http.get(`http://www.google.com/finance/info?q=${data.content}`, (res) => {
+        //     console.log(`Got response: ${res.statusCode}`);
+        //     if(res.statusCode == 400)
+        //     {
+        //         console.log("not found")
+        //         bot.reply(`Sorry, specified stock quote identifier "${data.content}" not found!`, true);
+        //     }
+        //     // consume response body
+        //     var pageData = '';
 
-            res.on('data', function(chunk) {
-                pageData += chunk;
-            });
+        //     res.on('data', function(chunk) {
+        //         pageData += chunk;
+        //     });
 
-            res.on('end', function() {
-                //console.log("end - " + pageData);
-                pageData = pageData.substring(3); //remove "//" from response.
-                var parsed = JSON.parse(pageData);
-                //console.log(JSON.stringify(parsed));
-                bot.reply(`Here is the current stock value : "${parsed[0].t} ${parsed[0].l}" from ${parsed[0].e}.`, true);
-            });
+        //     res.on('end', function() {
+        //         //console.log("end - " + pageData);
+        //         pageData = pageData.substring(3); //remove "//" from response.
+        //         var parsed = JSON.parse(pageData);
+        //         //console.log(JSON.stringify(parsed));
+        //         bot.reply(`Here is the current stock value : "${parsed[0].t} ${parsed[0].l}" from ${parsed[0].e}.`, true);
+        //     });
 
-            res.resume();
-        }).on('error', (e) => {
-            console.log(`Got error: ${e.message}`);
-            bot.reply(`Error! "${e.message}".`, true);
-        });
+        //     res.resume();
+        // }).on('error', (e) => {
+        //     console.log(`Got error: ${e.message}`);
+        //     bot.reply(`Error! "${e.message}".`, true);
+        // });
 
     }
 });
@@ -85,6 +86,7 @@ const port = process.env.PORT || 8080;
 server.listen(port);
 console.log('Listening for incoming requests on port ' + port);
 
-services.getStockSymbol('Microsoft', (symbol) => {
-    console.log(JSON.stringify(symbol));
-})
+var sclient = new stockClient.StockClient()
+sclient.getStockSymbol('test', (error, data) => {
+    console.log(data);
+});

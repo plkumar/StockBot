@@ -1,7 +1,9 @@
 /**
  * StockClient
  */
-class StockClient {
+const http = require('http');
+
+export class StockClient {
     constructor() {
         
     }
@@ -21,12 +23,12 @@ class StockClient {
     
     getStockPrice(symbol: string, callBack : any )
     {
-        http.get(`http://www.google.com/finance/info?q=${data.content}`, (res) => {
+        http.get(`http://www.google.com/finance/info?q=${symbol}`, (res) => {
             console.log(`Got response: ${res.statusCode}`);
             if(res.statusCode == 400)
             {
                 console.log("not found")
-                bot.reply(`Sorry, specified stock quote identifier "${data.content}" not found!`, true);
+                //bot.reply(`Sorry, specified stock quote identifier "${data.content}" not found!`, true);
             }
 
             // consume response body
@@ -49,7 +51,7 @@ class StockClient {
             console.log(`Got error: ${e.message}`);
             if(callBack)
             {
-                callBack(error, null)
+                callBack(e, null)
             }
         });
     }
