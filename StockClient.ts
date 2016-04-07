@@ -18,4 +18,39 @@ class StockClient {
             }
         });
     }
+    
+    getStockPrice(symbol: string, callBack : any )
+    {
+        http.get(`http://www.google.com/finance/info?q=${data.content}`, (res) => {
+            console.log(`Got response: ${res.statusCode}`);
+            if(res.statusCode == 400)
+            {
+                console.log("not found")
+                bot.reply(`Sorry, specified stock quote identifier "${data.content}" not found!`, true);
+            }
+
+            // consume response body
+            var pageData = '';
+
+            res.on('data', function(chunk) {
+                pageData += chunk;
+            });
+
+            res.on('end', function() {
+                pageData = pageData.substring(3); //remove "//" from response.
+                var parsed = JSON.parse(pageData);
+                if(callBack){
+                    callBack(null, parsed)
+                }
+            });
+
+            res.resume();
+        }).on('error', (e) => {
+            console.log(`Got error: ${e.message}`);
+            if(callBack)
+            {
+                callBack(error, null)
+            }
+        });
+    }
 }
