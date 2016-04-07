@@ -4,7 +4,7 @@ const fs = require('fs');
 const restify = require('restify');
 const skype = require('skype-sdk');
 const http = require('http');
-import  stockClient = require('./StockClient');
+import  stockClient = require('./stockclient');
 
 const botService = new skype.BotService({
     messaging: {
@@ -87,6 +87,7 @@ server.listen(port);
 console.log('Listening for incoming requests on port ' + port);
 
 var sclient = new stockClient.StockClient()
-sclient.getStockSymbol('test', (error, data) => {
+sclient.getStockSymbol('Microsoft', (error, data) => {
+    console.log(error);
     console.log(data);
 });

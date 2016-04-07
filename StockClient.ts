@@ -3,12 +3,16 @@
  */
 const http = require('http');
 
+interface SClientCallback {
+    (error: any, data:any): void;
+}
+
 export class StockClient {
     constructor() {
         
     }
     
-    getStockSymbol(input: string, callback: any) {
+    getStockSymbol(input: string, callback: SClientCallback) {
         var url = `http://dev.markitondemand.com/Api/v2/Lookup/json?input=${input}`;
         var request = require('request');
         request.get(url, (error, response, body) => {
@@ -16,19 +20,18 @@ export class StockClient {
 
             var parsed = JSON.parse(symbolResponse);
             if (callback) {
-                callback(parsed);
+                callback(error, parsed);
             }
         });
     }
     
-    getStockPrice(symbol: string, callBack : any )
+    getStockPrice(symbol: string, callBack : SClientCallback )
     {
         http.get(`http://www.google.com/finance/info?q=${symbol}`, (res) => {
             console.log(`Got response: ${res.statusCode}`);
             if(res.statusCode == 400)
             {
-                console.log("not found")
-                //bot.reply(`Sorry, specified stock quote identifier "${data.content}" not found!`, true);
+                console.log("not found");
             }
 
             // consume response body
@@ -42,7 +45,7 @@ export class StockClient {
                 pageData = pageData.substring(3); //remove "//" from response.
                 var parsed = JSON.parse(pageData);
                 if(callBack){
-                    callBack(null, parsed)
+                    callBack(null, parsed);
                 }
             });
 
@@ -51,7 +54,7 @@ export class StockClient {
             console.log(`Got error: ${e.message}`);
             if(callBack)
             {
-                callBack(e, null)
+                callBack(e, null);
             }
         });
     }

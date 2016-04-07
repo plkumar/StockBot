@@ -2,24 +2,24 @@
 /**
  * StockClient
  */
-var http = require('http');
-var StockClient = (function () {
-    function StockClient() {
+const http = require('http');
+class StockClient {
+    constructor() {
     }
-    StockClient.prototype.getStockSymbol = function (input, callback) {
-        var url = "http://dev.markitondemand.com/Api/v2/Lookup/json?input=" + input;
+    getStockSymbol(input, callback) {
+        var url = `http://dev.markitondemand.com/Api/v2/Lookup/json?input=${input}`;
         var request = require('request');
-        request.get(url, function (error, response, body) {
+        request.get(url, (error, response, body) => {
             var symbolResponse = body;
             var parsed = JSON.parse(symbolResponse);
             if (callback) {
-                callback(parsed);
+                callback(error, parsed);
             }
         });
-    };
-    StockClient.prototype.getStockPrice = function (symbol, callBack) {
-        http.get("http://www.google.com/finance/info?q=" + symbol, function (res) {
-            console.log("Got response: " + res.statusCode);
+    }
+    getStockPrice(symbol, callBack) {
+        http.get(`http://www.google.com/finance/info?q=${symbol}`, (res) => {
+            console.log(`Got response: ${res.statusCode}`);
             if (res.statusCode == 400) {
                 console.log("not found");
             }
@@ -36,14 +36,13 @@ var StockClient = (function () {
                 }
             });
             res.resume();
-        }).on('error', function (e) {
-            console.log("Got error: " + e.message);
+        }).on('error', (e) => {
+            console.log(`Got error: ${e.message}`);
             if (callBack) {
                 callBack(e, null);
             }
         });
-    };
-    return StockClient;
-}());
+    }
+}
 exports.StockClient = StockClient;
-//# sourceMappingURL=StockClient.js.map
+//# sourceMappingURL=stockclient.js.map
