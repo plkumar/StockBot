@@ -1,9 +1,9 @@
 /// <reference path="typings/tsd.d.ts" />
 
 var https = require('https');
-var exports: any = module.exports = {};
+//var exports: any = module.exports = {};
 
-exports.GetLUISInfo = function(sourceText, callBack) {
+export function GetLUISInfo(sourceText, callBack) {
     var luisBaseUrl = "https://api.projectoxford.ai/luis/v1";
     var applicationId = "07c4c72e-d229-4c7b-96db-2034c036d30e";
     var subscriptionKey = "c2ba4a70587642b7a4cada97a40584ed";
@@ -30,7 +30,7 @@ exports.GetLUISInfo = function(sourceText, callBack) {
     });
 };
 
-exports.getStockSymbol = (input, callback) => {
+export function getStockSymbol (input, callback) {
     var url = `http://dev.markitondemand.com/Api/v2/Lookup/json?input=${input}`;
     var request = require('request');
     request.get(url, (error, response, body) => {
