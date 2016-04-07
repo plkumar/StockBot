@@ -1,6 +1,7 @@
 /// <reference path="typings/tsd.d.ts" />
+/// <reference path="LUISEntities.ts" />
+"use strict";
 var https = require('https');
-//var exports: any = module.exports = {};
 class LUISClient {
     constructor() {
     }
@@ -13,11 +14,9 @@ class LUISClient {
             if (callBack) {
                 var pageData = '';
                 response.on('data', function (chunk) {
-                    //console.log(chunk);
                     pageData += chunk;
                 });
                 response.on('end', function () {
-                    //console.log(pageData);
                     var parsed = JSON.parse(pageData);
                     callBack(parsed);
                 });
@@ -28,4 +27,5 @@ class LUISClient {
         });
     }
 }
+exports.LUISClient = LUISClient;
 //# sourceMappingURL=luis-client.js.map

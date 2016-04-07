@@ -1,4 +1,4 @@
-declare module namespace {
+declare module luis {
 
     export interface Value {
         entity: string;
