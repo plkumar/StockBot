@@ -42,12 +42,32 @@ server.post('/v1/message', skype.messagingHandler(botService));
 server.post('/v1/call', function (data) {
     console.log("Call recevied" + data);
 });
-const port = process.env.PORT || 8080;
-server.listen(port);
-console.log('Listening for incoming requests on port ' + port);
+// const port = process.env.PORT || 8080;
+// server.listen(port);
+// console.log('Listening for incoming requests on port ' + port);
 var sclient = new stockClient.StockClient();
-sclient.getStockSymbol('Microsoft', (error, data) => {
-    console.log(error);
-    console.log(data);
+sclient.getStockSymbol('Micro', (error, data) => {
+    if (error)
+        console.log(error);
+    if (data) {
+        //console.log(data);
+        data.forEach((symbol) => {
+            sclient.getStockPrice(symbol.Symbol, (error, data) => {
+                if (error)
+                    console.log(error);
+                if (data) {
+                    //console.log(data);
+                    data.forEach((stockInfo) => {
+                        console.log(`${stockInfo.t} : ${stockInfo.l}`);
+                    });
+                }
+                ;
+            });
+        });
+    }
 });
+// sclient.getStockPrice("PELKAY", (error, data) => {
+//     if(error) console.log(error);
+//     if(data) console.log(data);
+// }); 
 //# sourceMappingURL=stockbot.js.map
