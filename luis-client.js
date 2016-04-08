@@ -12,7 +12,7 @@ class LUISClient {
         var requestUri = `${luisBaseUrl}/application?id=${applicationId}&subscription-key=${subscriptionKey}&q=${sourceText}`;
         fetch(requestUri).then((res) => {
             if (res.status === 200) {
-                return res.text();
+                return res.json();
             }
             else {
                 callback({
@@ -29,8 +29,8 @@ class LUISClient {
     }
     getPrimaryIntent(luisInfo) {
         return luisInfo.intents.sort((a, b) => {
-            return a.score > b.score ? 1 : -1;
-        })[0].intent;
+            return a.score < b.score ? 1 : -1;
+        })[0];
     }
 }
 exports.LUISClient = LUISClient;

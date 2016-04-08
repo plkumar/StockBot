@@ -4,7 +4,7 @@ const fs = require('fs');
 const restify = require('restify');
 const skype = require('skype-sdk');
 const http = require('http');
-import  stockClient = require('./stockclient');
+import stockClient = require('./stockclient');
 import luisclient = require('./luis-client');
 
 const botService = new skype.BotService({
@@ -67,7 +67,7 @@ botService.on('personalMessage', (bot, data) => {
     }
 });
 
-botService.on('groupMessage', (bot,message) => {
+botService.on('groupMessage', (bot, message) => {
     console.log("received a group message");
 });
 
@@ -87,27 +87,29 @@ server.post('/v1/call', function(data) {
 // server.listen(port);
 // console.log('Listening for incoming requests on port ' + port);
 
-var sclient = new stockClient.StockClient()
-sclient.getStockSymbol('Micro', (error, data) => {
-    if(error) console.log(error);
-    if(data) {
-        //console.log(data);
-        data.forEach( (symbol) =>{
-            sclient.getStockPrice(symbol.Symbol, (error, data) => {
-                if(error) console.log(error);
-                if(data) {
-                    //console.log(data);
-                    data.forEach((stockInfo) => {
-                        console.log(`${stockInfo.t} : ${stockInfo.l}`);
-                    })
-                };
-            });
-        });
-    }
-});
 
 var lclient = new luisclient.LUISClient();
-lclient.GetLUISInfo("get microsft stock price", (error, data) => {
-    console.log(data);
-    lclient.getPrimaryIntent(data)
+lclient.GetLUISInfo("get Ford stock price", (error, data) => {
+    //console.log(data.intents);
+    var primaryIntent = lclient.getPrimaryIntent(data);
+    console.log(primaryIntent.actions[0].parameters[0].value[0].entity);
+
+    var sclient = new stockClient.StockClient()
+    sclient.getStockSymbol(primaryIntent.actions[0].parameters[0].value[0].entity, (error, data) => {
+        if (error) console.log(error);
+        if (data) {
+            //console.log(data);
+            data.forEach((symbol) => {
+                sclient.getStockPrice(symbol.Symbol, (error, data) => {
+                    if (error) console.log(error);
+                    if (data) {
+                        //console.log(data);
+                        data.forEach((stockInfo) => {
+                            console.log(`${stockInfo.t} : ${stockInfo.l}`);
+                        })
+                    };
+                });
+            });
+        }
+    });
 })

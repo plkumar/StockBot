@@ -46,29 +46,31 @@ server.post('/v1/call', function (data) {
 // const port = process.env.PORT || 8080;
 // server.listen(port);
 // console.log('Listening for incoming requests on port ' + port);
-var sclient = new stockClient.StockClient();
-sclient.getStockSymbol('Micro', (error, data) => {
-    if (error)
-        console.log(error);
-    if (data) {
-        //console.log(data);
-        data.forEach((symbol) => {
-            sclient.getStockPrice(symbol.Symbol, (error, data) => {
-                if (error)
-                    console.log(error);
-                if (data) {
-                    //console.log(data);
-                    data.forEach((stockInfo) => {
-                        console.log(`${stockInfo.t} : ${stockInfo.l}`);
-                    });
-                }
-                ;
-            });
-        });
-    }
-});
 var lclient = new luisclient.LUISClient();
-lclient.GetLUISInfo("get microsft stock price", (error, data) => {
-    console.log(data);
+lclient.GetLUISInfo("get Ford stock price", (error, data) => {
+    //console.log(data.intents);
+    var primaryIntent = lclient.getPrimaryIntent(data);
+    console.log(primaryIntent.actions[0].parameters[0].value[0].entity);
+    var sclient = new stockClient.StockClient();
+    sclient.getStockSymbol(primaryIntent.actions[0].parameters[0].value[0].entity, (error, data) => {
+        if (error)
+            console.log(error);
+        if (data) {
+            //console.log(data);
+            data.forEach((symbol) => {
+                sclient.getStockPrice(symbol.Symbol, (error, data) => {
+                    if (error)
+                        console.log(error);
+                    if (data) {
+                        //console.log(data);
+                        data.forEach((stockInfo) => {
+                            console.log(`${stockInfo.t} : ${stockInfo.l}`);
+                        });
+                    }
+                    ;
+                });
+            });
+        }
+    });
 });
 //# sourceMappingURL=stockbot.js.map
