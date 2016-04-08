@@ -26,7 +26,7 @@ botService.on('message', (bot, data) => {
     console.log("message received ");
 });
 botService.on('personalMessage', (bot, botdata) => {
-    console.log(botdata);
+    //console.log(botdata);
     //console.log("Message received \n" + JSON.stringify(data));
     //bot.reply(`Hey ${data.from}. Thank you for your message: "${data.content}".`, true);
     if (botdata.content !== "") {
