@@ -39,7 +39,7 @@ botService.on('personalMessage', (bot, botdata) => {
 
         var lclient = new luisclient.LUISClient();
         lclient.GetLUISInfo(botdata.content, (error, data) => {
-            //console.log(data.intents);
+            console.log(data.intents);
             var primaryIntent = lclient.getPrimaryIntent(data);
             console.log(primaryIntent);
             switch (primaryIntent.intent) {

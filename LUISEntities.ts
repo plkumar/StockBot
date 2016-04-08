@@ -38,4 +38,15 @@ declare module luis {
         entities: Entity[];
     }
 
+    export interface TopScoringIntent {
+        intent: string;
+        score: number;
+        actions: Action[];
+    }
+
+    export interface LUISPreviewResponse {
+        query: string;
+        topScoringIntent: TopScoringIntent;
+        entities: Entity[];
+    }
 }
