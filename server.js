@@ -84,4 +84,4 @@ server.post('/v1/call', function (data) {
 const port = process.env.PORT || 8080;
 server.listen(port);
 console.log('Listening for incoming requests on port ' + port);
-//# sourceMappingURL=stockbot.js.map
+//# sourceMappingURL=server.js.map
