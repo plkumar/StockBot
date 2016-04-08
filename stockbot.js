@@ -5,6 +5,7 @@ const restify = require('restify');
 const skype = require('skype-sdk');
 const http = require('http');
 const stockClient = require('./stockclient');
+const luisclient = require('./luis-client');
 const botService = new skype.BotService({
     messaging: {
         botId: process.env.BOT_ID || "64509262-bbb5-468b-bbc3-9d48cf11791d",
@@ -66,8 +67,8 @@ sclient.getStockSymbol('Micro', (error, data) => {
         });
     }
 });
-// sclient.getStockPrice("PELKAY", (error, data) => {
-//     if(error) console.log(error);
-//     if(data) console.log(data);
-// }); 
+var lclient = new luisclient.LUISClient();
+lclient.GetLUISInfo("get microsft stock price", (error, data) => {
+    console.log(data);
+});
 //# sourceMappingURL=stockbot.js.map

@@ -5,6 +5,7 @@ const restify = require('restify');
 const skype = require('skype-sdk');
 const http = require('http');
 import  stockClient = require('./stockclient');
+import luisclient = require('./luis-client');
 
 const botService = new skype.BotService({
     messaging: {
@@ -104,3 +105,9 @@ sclient.getStockSymbol('Micro', (error, data) => {
         });
     }
 });
+
+var lclient = new luisclient.LUISClient();
+lclient.GetLUISInfo("get microsft stock price", (error, data) => {
+    console.log(data);
+    lclient.getPrimaryIntent(data)
+})
