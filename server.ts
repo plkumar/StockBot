@@ -73,36 +73,6 @@ botService.on('personalMessage', (bot, botdata) => {
             }
 
         })
-
-        //stockClient.getStockSymbol('test', (error, data) => {});
-        // http.get(`http://www.google.com/finance/info?q=${data.content}`, (res) => {
-        //     console.log(`Got response: ${res.statusCode}`);
-        //     if(res.statusCode == 400)
-        //     {
-        //         console.log("not found")
-        //         bot.reply(`Sorry, specified stock quote identifier "${data.content}" not found!`, true);
-        //     }
-        //     // consume response body
-        //     var pageData = '';
-
-        //     res.on('data', function(chunk) {
-        //         pageData += chunk;
-        //     });
-
-        //     res.on('end', function() {
-        //         //console.log("end - " + pageData);
-        //         pageData = pageData.substring(3); //remove "//" from response.
-        //         var parsed = JSON.parse(pageData);
-        //         //console.log(JSON.stringify(parsed));
-        //         bot.reply(`Here is the current stock value : "${parsed[0].t} ${parsed[0].l}" from ${parsed[0].e}.`, true);
-        //     });
-
-        //     res.resume();
-        // }).on('error', (e) => {
-        //     console.log(`Got error: ${e.message}`);
-        //     bot.reply(`Error! "${e.message}".`, true);
-        // });
-
     }
 });
 
@@ -113,9 +83,8 @@ botService.on('groupMessage', (bot, message) => {
 const server = restify.createServer();
 
 /* Uncomment following lines to enable https verification for Azure.*/
-server.use(skype.ensureHttps(true));
-server.use(skype.verifySkypeCert({}));
-
+// server.use(skype.ensureHttps(true));
+// server.use(skype.verifySkypeCert({}));
 
 server.post('/v1/message', skype.messagingHandler(botService));
 server.post('/v1/call', function(data) {
