@@ -17,6 +17,7 @@ const botService = new skype.BotService({
     }
 });
 
+// Create bot and add dialogs
 botService.on('contactRemoved', (bot, event) => {
     console.log(`We lost user ${event.from}.`);
 });
@@ -44,7 +45,18 @@ botService.on('personalMessage', (bot, botdata) => {
             console.log(primaryIntent);
             switch (primaryIntent.intent) {
                 case "Greeting":
-                        bot.reply(`Hey ${botdata.from}. `, true);
+                    var greetings = [
+                        "Hi there!",
+                        "Hello ",
+                        "Hola",
+                        "Hallo",
+                        "Hi",
+                        "Hello there!"
+                    ];
+
+                    var i = Math.round(Math.random() * (greetings.length - 1));
+
+                    bot.reply(`${greetings[i]} ${botdata.from}. `, true);
                     break;
                 case "GetStockQuote":
                     var sclient = new stockClient.StockClient()
