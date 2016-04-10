@@ -95,7 +95,7 @@ botService.on('groupMessage', (bot, message) => {
 const server = restify.createServer();
 
 /* Uncomment following lines to enable https verification for Azure.*/
-// server.use(skype.ensureHttps(true));
+server.use(skype.ensureHttps(true));
 // server.use(skype.verifySkypeCert({}));
 
 server.post('/v1/message', skype.messagingHandler(botService));
