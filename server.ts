@@ -3,7 +3,7 @@
 const fs = require('fs');
 const restify = require('restify');
 const skype = require('skype-sdk');
-const http = require('http');
+const builder = require('botbuilder');
 import stockClient = require('./stockclient');
 import luisclient = require('./luis-client');
 
@@ -15,6 +15,12 @@ const botService = new skype.BotService({
         appId: process.env.APP_ID || "30a5ed7b-8880-4025-b765-50094b992afc",
         appSecret: process.env.APP_SECRET || "YtzrLy0VFiiYzSa4FQeucbu"
     }
+});
+
+// Create bot and add dialogs
+var bot = new builder.SkypeBot(botService);
+bot.add('/', function (session) {
+   session.send('Hello World'); 
 });
 
 // Create bot and add dialogs
