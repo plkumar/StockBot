@@ -7,6 +7,13 @@ const builder = require('botbuilder');
 import stockClient = require('./stockclient');
 import luisclient = require('./luis-client');
 
+var luisBaseUrl = "https://api.projectoxford.ai/luis/v1/application";
+var applicationId = "07c4c72e-d229-4c7b-96db-2034c036d30e";
+var subscriptionKey = "c2ba4a70587642b7a4cada97a40584ed";
+var model = process.env.model || `${luisBaseUrl}?id=${applicationId}&subscription-key=${subscriptionKey}&q=`;
+
+var dialog = new builder.LuisDialog(model);
+
 const botService = new skype.BotService({
     messaging: {
         botId: process.env.BOT_ID || "64509262-bbb5-468b-bbc3-9d48cf11791d",
@@ -19,9 +26,64 @@ const botService = new skype.BotService({
 
 // Create bot and add dialogs
 var bot = new builder.SkypeBot(botService);
-bot.add('/', function (session) {
-   session.send('Hello World'); 
+bot.add('/', dialog);
+
+dialog.on("Greeting", function(session, args) {
+
+    var greetings = [
+        "Hi there!",
+        "Hello ",
+        "Hola",
+        "Hallo",
+        "Hi",
+        "Hello there!"
+    ];
+
+    var i = Math.round(Math.random() * (greetings.length - 1));
+
+    session.send(`${greetings[i]}!.`);
 });
+
+dialog.on("GetStockQuote", [
+    function(session, args, next) {
+        console.log("args :: \n" + JSON.stringify(args.entities));
+        var symbol = builder.EntityRecognizer.findEntity(args.entities, 'company');
+        if (!symbol) {
+            builder.Prompts.text(session, "Which company stock you are intrested in?");
+        } else {
+            next({ response: symbol.entity });
+        }
+    },
+    function(session, results) {
+        if (results.response) {
+            // ... save task
+            //session.send("Ok... Added the '%s' task.", results.response);
+            var sclient = new stockClient.StockClient()
+            sclient.getStockSymbol(results.response, (error, data) => {
+                if (error) console.log(error);
+                if (data) {
+                    //console.log(data);
+                    data.forEach((symbol) => {
+                        sclient.getStockPrice(symbol.Symbol, (error, data) => {
+                            if (error) console.log(error);
+                            if (data) {
+                                //console.log(data);
+                                data.forEach((stockInfo) => {
+                                    console.log(`${stockInfo.t} : ${stockInfo.l}`);
+                                    session.send(`Here is the current stock value : "${stockInfo.t} ${stockInfo.l}" from ${stockInfo.e}.`);
+                                })
+                            };
+                        });
+                    });
+                }
+            });
+        } else {
+            session.send("Ok..");
+        }
+    }
+]);
+
+dialog.on("GetVersion", builder.DialogAction.send('StockBot version 0.1a'));
 
 // Create bot and add dialogs
 botService.on('contactRemoved', (bot, event) => {
@@ -39,59 +101,60 @@ botService.on('message', (bot, data) => {
 
 botService.on('personalMessage', (bot, botdata) => {
 
-    //console.log(botdata);
+    console.log(botdata);
     //console.log("Message received \n" + JSON.stringify(data));
     //bot.reply(`Hey ${data.from}. Thank you for your message: "${data.content}".`, true);
-    if (botdata.content !== "") {
 
-        var lclient = new luisclient.LUISClient();
-        lclient.GetLUISInfo(botdata.content, (error, data) => {
-            console.log(data.intents);
-            var primaryIntent = lclient.getPrimaryIntent(data);
-            console.log(primaryIntent);
-            switch (primaryIntent.intent) {
-                case "Greeting":
-                    var greetings = [
-                        "Hi there!",
-                        "Hello ",
-                        "Hola",
-                        "Hallo",
-                        "Hi",
-                        "Hello there!"
-                    ];
+    // if (botdata.content !== "") {
 
-                    var i = Math.round(Math.random() * (greetings.length - 1));
+    //     var lclient = new luisclient.LUISClient();
+    //     lclient.GetLUISInfo(botdata.content, (error, data) => {
+    //         console.log(data.intents);
+    //         var primaryIntent = lclient.getPrimaryIntent(data);
+    //         console.log(primaryIntent);
+    //         switch (primaryIntent.intent) {
+    //             case "Greeting":
+    //                 var greetings = [
+    //                     "Hi there!",
+    //                     "Hello ",
+    //                     "Hola",
+    //                     "Hallo",
+    //                     "Hi",
+    //                     "Hello there!"
+    //                 ];
 
-                    bot.reply(`${greetings[i]} ${botdata.from}. `, true);
-                    break;
-                case "GetStockQuote":
-                    var sclient = new stockClient.StockClient()
-                    sclient.getStockSymbol(primaryIntent.actions[0].parameters[0].value[0].entity, (error, data) => {
-                        if (error) console.log(error);
-                        if (data) {
-                            //console.log(data);
-                            data.forEach((symbol) => {
-                                sclient.getStockPrice(symbol.Symbol, (error, data) => {
-                                    if (error) console.log(error);
-                                    if (data) {
-                                        //console.log(data);
-                                        data.forEach((stockInfo) => {
-                                            console.log(`${stockInfo.t} : ${stockInfo.l}`);
-                                            bot.reply(`Here is the current stock value : "${stockInfo.t} ${stockInfo.l}" from ${stockInfo.e}.`, true);
-                                        })
-                                    };
-                                });
-                            });
-                        }
-                    });
-                    break;
+    //                 var i = Math.round(Math.random() * (greetings.length - 1));
 
-                default:
-                    break;
-            }
+    //                 bot.reply(`${greetings[i]} ${botdata.from}. `, true);
+    //                 break;
+    //             case "GetStockQuote":
+    //                 var sclient = new stockClient.StockClient()
+    //                 sclient.getStockSymbol(primaryIntent.actions[0].parameters[0].value[0].entity, (error, data) => {
+    //                     if (error) console.log(error);
+    //                     if (data) {
+    //                         //console.log(data);
+    //                         data.forEach((symbol) => {
+    //                             sclient.getStockPrice(symbol.Symbol, (error, data) => {
+    //                                 if (error) console.log(error);
+    //                                 if (data) {
+    //                                     //console.log(data);
+    //                                     data.forEach((stockInfo) => {
+    //                                         console.log(`${stockInfo.t} : ${stockInfo.l}`);
+    //                                         bot.reply(`Here is the current stock value : "${stockInfo.t} ${stockInfo.l}" from ${stockInfo.e}.`, true);
+    //                                     })
+    //                                 };
+    //                             });
+    //                         });
+    //                     }
+    //                 });
+    //                 break;
 
-        })
-    }
+    //             default:
+    //                 break;
+    //         }
+
+    //     })
+    // }
 });
 
 botService.on('groupMessage', (bot, message) => {
