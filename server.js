@@ -32,7 +32,7 @@ dialog.on("Greeting", function (session, args) {
         "Hello there!"
     ];
     var i = Math.round(Math.random() * (greetings.length - 1));
-    session.send(`${greetings[i]}!}. `);
+    session.send(`${greetings[i]}!.`);
 });
 dialog.on("GetStockQuote", [
     function (session, args, next) {
@@ -143,9 +143,11 @@ botService.on('groupMessage', (bot, message) => {
     console.log("received a group message");
 });
 const server = restify.createServer();
-/* Uncomment following lines to enable https verification for Azure.*/
-// server.use(skype.ensureHttps(true));
-// server.use(skype.verifySkypeCert({}));
+if (!process.env.DEBUG) {
+    console.log("Running in release mode, enabling the HTTPS");
+    /* Uncomment following lines to enable https verification for Azure.*/
+    server.use(skype.ensureHttps(true));
+}
 server.post('/v1/message', skype.messagingHandler(botService));
 server.post('/v1/call', function (data) {
     console.log("Call recevied" + data);

@@ -163,9 +163,13 @@ botService.on('groupMessage', (bot, message) => {
 
 const server = restify.createServer();
 
-/* Uncomment following lines to enable https verification for Azure.*/
-server.use(skype.ensureHttps(true));
-// server.use(skype.verifySkypeCert({}));
+if(!process.env.DEBUG) {
+    console.log("Running in release mode, enabling the HTTPS");
+    /* Uncomment following lines to enable https verification for Azure.*/
+    server.use(skype.ensureHttps(true));
+    // server.use(skype.verifySkypeCert({}));
+}
+
 
 server.post('/v1/message', skype.messagingHandler(botService));
 server.post('/v1/call', function(data) {
@@ -175,3 +179,4 @@ server.post('/v1/call', function(data) {
 const port = process.env.PORT || 8080;
 server.listen(port);
 console.log('Listening for incoming requests on port ' + port);
+
