@@ -55,19 +55,13 @@ dialog.on("GetStockQuote", [
                     console.log(error);
                 if (data) {
                     //console.log(data);
+                    var symbolText = '';
                     data.forEach((symbol) => {
-                        sclient.getStockPrice(symbol.Symbol, (error, data) => {
-                            if (error)
-                                console.log(error);
-                            if (data) {
-                                //console.log(data);
-                                data.forEach((stockInfo) => {
-                                    console.log(`${stockInfo.t} : ${stockInfo.l}`);
-                                    session.send(`Here is the current stock value : "${stockInfo.t} ${stockInfo.l}" from ${stockInfo.e}.`);
-                                });
-                            }
-                            ;
-                        });
+                        symbolText = `${symbolText},${symbol.Symbol}`;
+                    });
+                    console.log("Symbols :" + symbolText);
+                    QueryStockPrice(sclient, symbolText, function (message) {
+                        session.send(message);
                     });
                 }
             });
@@ -77,6 +71,19 @@ dialog.on("GetStockQuote", [
         }
     }
 ]);
+function QueryStockPrice(sclient, symbol, callBack) {
+    sclient.getStockPrice(symbol, (error, data) => {
+        if (error)
+            console.log(error);
+        if (data) {
+            data.forEach((stockInfo) => {
+                console.log(`${stockInfo.t} : ${stockInfo.l}`);
+                callBack(`Here is the current stock value : "${stockInfo.t} ${stockInfo.l}" from ${stockInfo.e}.`);
+            });
+        }
+        ;
+    });
+}
 dialog.on("GetVersion", builder.DialogAction.send('StockBot version 0.1a'));
 // Create bot and add dialogs
 botService.on('contactRemoved', (bot, event) => {

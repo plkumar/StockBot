@@ -63,17 +63,14 @@ dialog.on("GetStockQuote", [
                 if (error) console.log(error);
                 if (data) {
                     //console.log(data);
+                    var symbolText = '';
                     data.forEach((symbol) => {
-                        sclient.getStockPrice(symbol.Symbol, (error, data) => {
-                            if (error) console.log(error);
-                            if (data) {
-                                //console.log(data);
-                                data.forEach((stockInfo) => {
-                                    console.log(`${stockInfo.t} : ${stockInfo.l}`);
-                                    session.send(`Here is the current stock value : "${stockInfo.t} ${stockInfo.l}" from ${stockInfo.e}.`);
-                                })
-                            };
-                        });
+                        symbolText = `${symbolText},${symbol.Symbol}`;
+                    });
+
+                    console.log("Symbols :" + symbolText);
+                    QueryStockPrice(sclient, symbolText, function(message) {
+                        session.send(message);
                     });
                 }
             });
@@ -82,6 +79,18 @@ dialog.on("GetStockQuote", [
         }
     }
 ]);
+
+function QueryStockPrice(sclient: stockClient.StockClient, symbol: string, callBack: any) {
+    sclient.getStockPrice(symbol, (error, data) => {
+        if (error) console.log(error);
+        if (data) {
+            data.forEach((stockInfo) => {
+                console.log(`${stockInfo.t} : ${stockInfo.l}`);
+                callBack(`Here is the current stock value : "${stockInfo.t} ${stockInfo.l}" from ${stockInfo.e}.`);
+            })
+        };
+    });
+}
 
 dialog.on("GetVersion", builder.DialogAction.send('StockBot version 0.1a'));
 
@@ -163,7 +172,7 @@ botService.on('groupMessage', (bot, message) => {
 
 const server = restify.createServer();
 
-if(!process.env.DEBUG) {
+if (!process.env.DEBUG) {
     console.log("Running in release mode, enabling the HTTPS");
     /* Uncomment following lines to enable https verification for Azure.*/
     server.use(skype.ensureHttps(true));
