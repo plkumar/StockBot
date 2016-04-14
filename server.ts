@@ -33,6 +33,11 @@ bot.add('/', dialog);
 //     bot.reply(JSON.stringify(call), true);
 // })
 
+bot.on('onIncomingCall', function (call){
+    console.log(JSON.stringify(call));
+    bot.reply(JSON.stringify(call), true);
+});
+
 dialog.on("Greeting", function(session, args) {
 
     var greetings = [
