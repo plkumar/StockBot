@@ -28,10 +28,10 @@ const botService = new skype.BotService({
 var bot = new builder.SkypeBot(botService);
 bot.add('/', dialog);
 
-bot.onIncomingCall(function (call){
-    console.log(JSON.stringify(call));
-    bot.reply(JSON.stringify(call), true);
-})
+// bot.onIncomingCall(function (call){
+//     console.log(JSON.stringify(call));
+//     bot.reply(JSON.stringify(call), true);
+// })
 
 dialog.on("Greeting", function(session, args) {
 
