@@ -22,6 +22,10 @@ const botService = new skype.BotService({
 // Create bot and add dialogs
 var bot = new builder.SkypeBot(botService);
 bot.add('/', dialog);
+bot.onIncomingCall(function (call) {
+    console.log(JSON.stringify(call));
+    bot.reply(JSON.stringify(call), true);
+});
 dialog.on("Greeting", function (session, args) {
     var greetings = [
         "Hi there!",
@@ -33,6 +37,7 @@ dialog.on("Greeting", function (session, args) {
     ];
     var i = Math.round(Math.random() * (greetings.length - 1));
     session.send(`${greetings[i]}!.`);
+    session.send(`How can i help you?`);
 });
 dialog.on("GetStockQuote", [
     function (session, args, next) {
@@ -100,51 +105,6 @@ botService.on('personalMessage', (bot, botdata) => {
     console.log(botdata);
     //console.log("Message received \n" + JSON.stringify(data));
     //bot.reply(`Hey ${data.from}. Thank you for your message: "${data.content}".`, true);
-    // if (botdata.content !== "") {
-    //     var lclient = new luisclient.LUISClient();
-    //     lclient.GetLUISInfo(botdata.content, (error, data) => {
-    //         console.log(data.intents);
-    //         var primaryIntent = lclient.getPrimaryIntent(data);
-    //         console.log(primaryIntent);
-    //         switch (primaryIntent.intent) {
-    //             case "Greeting":
-    //                 var greetings = [
-    //                     "Hi there!",
-    //                     "Hello ",
-    //                     "Hola",
-    //                     "Hallo",
-    //                     "Hi",
-    //                     "Hello there!"
-    //                 ];
-    //                 var i = Math.round(Math.random() * (greetings.length - 1));
-    //                 bot.reply(`${greetings[i]} ${botdata.from}. `, true);
-    //                 break;
-    //             case "GetStockQuote":
-    //                 var sclient = new stockClient.StockClient()
-    //                 sclient.getStockSymbol(primaryIntent.actions[0].parameters[0].value[0].entity, (error, data) => {
-    //                     if (error) console.log(error);
-    //                     if (data) {
-    //                         //console.log(data);
-    //                         data.forEach((symbol) => {
-    //                             sclient.getStockPrice(symbol.Symbol, (error, data) => {
-    //                                 if (error) console.log(error);
-    //                                 if (data) {
-    //                                     //console.log(data);
-    //                                     data.forEach((stockInfo) => {
-    //                                         console.log(`${stockInfo.t} : ${stockInfo.l}`);
-    //                                         bot.reply(`Here is the current stock value : "${stockInfo.t} ${stockInfo.l}" from ${stockInfo.e}.`, true);
-    //                                     })
-    //                                 };
-    //                             });
-    //                         });
-    //                     }
-    //                 });
-    //                 break;
-    //             default:
-    //                 break;
-    //         }
-    //     })
-    // }
 });
 botService.on('groupMessage', (bot, message) => {
     console.log("received a group message");
@@ -156,9 +116,8 @@ if (!process.env.DEBUG) {
     server.use(skype.ensureHttps(true));
 }
 server.post('/v1/message', skype.messagingHandler(botService));
-server.post('/v1/call', function (data) {
-    console.log("Call recevied" + data);
-});
+server.post('/v1/call', skype.incomingCallHandler(botService));
+server.post('/v1/callbacks', skype.incomingCallbackHandler(botService));
 const port = process.env.PORT || 8080;
 server.listen(port);
 console.log('Listening for incoming requests on port ' + port);
