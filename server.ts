@@ -25,17 +25,20 @@ const botService = new skype.BotService({
 });
 
 // Create bot and add dialogs
-var bot = new builder.SkypeBot(botService);
-bot.add('/', dialog);
+var skypebot = new builder.SkypeBot(botService);
+var textbot = new builder.TextBot(botService);
+skypebot.add('/', dialog);
+textbot.add('/', dialog);
+
 
 // bot.onIncomingCall(function (call){
 //     console.log(JSON.stringify(call));
 //     bot.reply(JSON.stringify(call), true);
 // })
 
-bot.on('onIncomingCall', function (call){
+skypebot.on('onIncomingCall', function (call){
     console.log(JSON.stringify(call));
-    bot.reply(JSON.stringify(call), true);
+    skypebot.reply(JSON.stringify(call), true);
 });
 
 dialog.on("Greeting", function(session, args) {
