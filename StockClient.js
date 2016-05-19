@@ -51,4 +51,4 @@ class StockClient {
     }
 }
 exports.StockClient = StockClient;
-//# sourceMappingURL=StockClient.js.map
+//# sourceMappingURL=stockclient.js.map
