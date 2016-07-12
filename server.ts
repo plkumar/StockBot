@@ -8,8 +8,8 @@ import stockClient = require('./stockclient');
 import luisclient = require('./luis-client');
 
 var luisBaseUrl = "https://api.projectoxford.ai/luis/v1/application";
-var applicationId = "07c4c72e-d229-4c7b-96db-2034c036d30e";
-var subscriptionKey = "c2ba4a70587642b7a4cada97a40584ed";
+var applicationId = "<LUIS APPLICATION ID>";
+var subscriptionKey = "<SUBSCIPTION KEY>";
 var model = process.env.model || `${luisBaseUrl}?id=${applicationId}&subscription-key=${subscriptionKey}&q=`;
 
 var dialog = new builder.LuisDialog(model);
@@ -20,7 +20,7 @@ const botService = new skype.BotService({
         serverUrl: "https://apis.skype.com",
         requestTimeout: 15000,
         appId: process.env.APP_ID || "30a5ed7b-8880-4025-b765-50094b992afc",
-        appSecret: process.env.APP_SECRET || "YtzrLy0VFiiYzSa4FQeucbu"
+        appSecret: process.env.APP_SECRET || "<APP KEY>"
     }
 });
 
