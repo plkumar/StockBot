@@ -3,7 +3,11 @@
     "files.exclude": {
         "**/.git": true,
         "**/.DS_Store": true,
-        "**/*.js": { "when": "$(basename).ts"},
-        "**/*.js.map" : true
-    }
+        "**/*.js": {
+            "when": "$(basename).ts"
+        },
+        "**/*.js.map": true
+    },
+    // Customizes which terminal application to run on OS X.
+    "terminal.external.osxExec": "iTerm.app"
 }
